@@ -2,9 +2,9 @@ import java.util.*;
 
 public class FieldManagementSystem {
 
-    private List<User> users = new ArrayList<>();
-    private List<Field> fields = new ArrayList<>();
-    private List<Booking> bookings = new ArrayList<>();
+    private final List<User> users = new ArrayList<>();
+    private final List<Field> fields = new ArrayList<>();
+    private final List<Booking> bookings = new ArrayList<>();
 
     public void registerUser(User user) {
         users.add(user);

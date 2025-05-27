@@ -1,8 +1,8 @@
 public class Field {
 
-    private String fieldId;
-    private String name;
-    private String type;
+    private final String fieldId;
+    private final String name;
+    private final String type;
     private String status;
 
     public Field(String fieldId, String name, String type) {
