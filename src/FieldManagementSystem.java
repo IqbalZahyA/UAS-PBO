@@ -60,4 +60,11 @@ public class FieldManagementSystem {
         }
     }
 
+    public List<Field> getFields() {
+        return fields;
+    }
+
+    public List<User> getUsers() {
+        return users;
+    }
 }

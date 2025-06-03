@@ -18,8 +18,20 @@ public class Booking {
         return member;
     }
 
+    public String getDate() {
+        return date;
+    }
+
+    public String getTimeSlot() {
+        return timeSlot;
+    }
+
+    public Field getField() {
+        return field;
+    }
+
     public String getBookingDetails() {
-        return "Booking Id: " + bookingId + "\nField: " + field.getInfo() + "\nMember; " + member.getUsername() + "\nDate: " + date + "Time: " + timeSlot;
+        return "Booking Id: " + bookingId + "\nField: " + field.getInfo() + "\nMember; " + member.getUsername() + "\nDate: " + date + "\nTime: " + timeSlot;
     }
 
 }

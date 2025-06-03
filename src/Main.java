@@ -1,10 +1,10 @@
 import java.util.*;
+import java.util.Scanner;
 
 public class Main {
+
     static Scanner scanner = new Scanner(System.in);
-    static List<User> users = new ArrayList<>();
-    static List<Field> fields = new ArrayList<>();
-    static List<Booking> bookings = new ArrayList<>();
+    static FieldManagementSystem system = new FieldManagementSystem();
     static User loggedInUser = null;
 
     public static void main(String[] args) {
@@ -45,14 +45,26 @@ public class Main {
         System.out.print("Password: ");
         String password = scanner.nextLine();
 
-        for (User user : users) {
+        boolean found = false;
+
+        for (User user : system.getUsers()) {
             if (user.getUsername().equals(username) && user.getPassword().equals(password)) {
                 loggedInUser = user;
-                System.out.println("Login berhasil sebagai " + user.getRole());
-                return;
+                found = true;
+                break;
             }
         }
-        System.out.println("Login gagal.");
+
+        if (found) {
+            System.out.println("Login berhasil sebagai " + loggedInUser.getRole());
+            if (loggedInUser instanceof Admin admin) {
+                System.out.println("Halo " + admin.getadminName());
+            } else if (loggedInUser instanceof Member member) {
+                System.out.println("Halo " + member.getmemberName());
+            }
+        } else {
+            System.out.println("Login gagal! Username atau password salah.");
+        }
     }
 
     static void register() {
@@ -65,8 +77,8 @@ public class Main {
         System.out.print("Member ID: ");
         String memberId = scanner.nextLine();
 
-        Member newMember = new Member(username, password, name, memberId);
-        users.add(newMember);
+        Member newMember = new Member(username, password, memberId, name);
+        system.registerUser(newMember);
         System.out.println("Registrasi berhasil.");
     }
 
@@ -112,12 +124,13 @@ public class Main {
         System.out.print("Tipe: ");
         String type = scanner.nextLine();
 
-        fields.add(new Field(id, name, type));
+        system.addField(new Field(id, name, type));
         System.out.println("Lapangan berhasil ditambahkan.");
     }
 
     static void tampilkanLapangan() {
-        for (Field f : fields) {
+        List<Field> daftar = system.searchField(""); // kosongkan keyword untuk menampilkan semua
+        for (Field f : daftar) {
             System.out.println(f.getInfo());
         }
     }
@@ -127,7 +140,8 @@ public class Main {
         System.out.print("Masukkan ID lapangan yang ingin dibooking: ");
         String fieldId = scanner.nextLine();
         Field selectedField = null;
-        for (Field f : fields) {
+
+        for (Field f : system.getFields()) {
             if (f.getFieldId().equals(fieldId)) {
                 selectedField = f;
                 break;
@@ -141,25 +155,52 @@ public class Main {
 
         System.out.print("Tanggal (yyyy-mm-dd): ");
         String tanggal = scanner.nextLine();
-        System.out.print("Waktu: ");
+        System.out.print("Jam (contoh 16:00-18:00): ");
         String waktu = scanner.nextLine();
 
-        Booking newBooking = new Booking("B" + (bookings.size() + 1), tanggal, waktu, selectedField, (Member) loggedInUser);
-        bookings.add(newBooking);
-        System.out.println("Booking berhasil.");
+        if (BookingManager.isFieldAvaiable(selectedField.getFieldId(), tanggal, waktu)) {
+            Booking newBooking = new Booking(
+                    "B" + (Database.bookings.size() + 1),
+                    tanggal,
+                    waktu,
+                    selectedField,
+                    (Member) loggedInUser
+            );
+            Database.bookings.add(newBooking);
+            selectedField.setStatus("Booked");
+            System.out.println("Booking berhasil!");
+        } else {
+            System.out.println("Jadwal bentrok! Silakan pilih waktu lain.");
+        }
     }
 
     static void lihatBookingSaya() {
-        for (Booking b : bookings) {
-            if (b.getMember().equals(loggedInUser)) {
-                System.out.println(b.getBookingDetails());
+        Member currentMember = (Member) loggedInUser;
+        boolean found = false;
+
+        System.out.println("\n=== BOOKING SAYA ===");
+        for (Booking booking : Database.bookings) {
+            if (booking.getMember().getUsername().equals(currentMember.getUsername())) {
+                System.out.println(booking.getBookingDetails());
+                System.out.println("-------------------------");
+                found = true;
             }
+        }
+
+        if (!found) {
+            System.out.println("Anda belum melakukan booking apapun.");
         }
     }
 
     static void seedData() {
-        users.add(new Admin("admin", "admin123", "Administrator", "A01"));
-        fields.add(new Field("F01", "Lapangan Futsal", "Futsal"));
-        fields.add(new Field("F02", "Lapangan Badminton", "Badminton"));
+        // Tambah satu admin
+        system.registerUser(new Admin("admin", "admin123", "A01", "Administrator"));
+
+        // Tambah lima lapangan
+        system.addField(new Field("F01", "Lapangan Futsal", "Futsal"));
+        system.addField(new Field("F02", "Lapangan Badminton", "Badminton"));
+        system.addField(new Field("F03", "Lapangan Basket", "Basket"));
+        system.addField(new Field("F04", "Lapangan Tenis", "Tenis"));
+        system.addField(new Field("F05", "Lapangan Voli", "Voli"));
     }
 }

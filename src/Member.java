@@ -1,18 +1,20 @@
 public class Member extends User {
 
     private final String memberId;
+    private final String memberName;
 
-    public Member(String username, String password, String name, String memberId) {
-        super(username, password, name);
+    public Member(String username, String password, String memberId, String memberName) {
+        super(username, password, "member");
         this.memberId = memberId;
+        this.memberName = memberName;
     }
 
-    @Override
-    public String getRole() {
-        return "Member";
-    }
+   public String getmemberName() {
+        return memberName;
+   }
 
-    public String getMemberId() {
-        return memberId;
-    }
+   @Override
+    public String getInfo() {
+        return "Member: " + memberName + " (" + memberId + ")";
+   }
 }
