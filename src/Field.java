@@ -1,34 +1,48 @@
 public class Field {
-
     private final String fieldId;
-    private final String name;
-    private final String type;
-    private String status;
+    private String fieldName;
+    private String fieldType;
+    private String status; // Tambahkan atribut status
 
-    public Field(String fieldId, String name, String type) {
+    // Constructor
+    public Field(String fieldId, String fieldName, String fieldType) {
         this.fieldId = fieldId;
-        this.name = name;
-        this.type = type;
-        this.status = "Available";
+        this.fieldName = fieldName;
+        this.fieldType = fieldType;
+        this.status = "Available"; // Default status
     }
 
-    public void setStatus(String status) {
-        this.status = status;
+    // Getter dan Setter
+    public String getFieldId() {
+        return fieldId;
+    }
+
+    public String getFieldName() {
+        return fieldName;
+    }
+
+    public void setFieldName(String fieldName) {
+        this.fieldName = fieldName;
+    }
+
+    public String getFieldType() {
+        return fieldType;
+    }
+
+    public void setFieldType(String fieldType) {
+        this.fieldType = fieldType;
     }
 
     public String getStatus() {
         return status;
     }
 
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    // Metode tambahan (opsional)
     public String getInfo() {
-        return fieldId + " - " + name + " (" + type + ") [" + status + "] ";
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getFieldId() {
-        return fieldId;
+        return "ID: " + fieldId + ", Nama: " + fieldName + ", Tipe: " + fieldType + ", Status: " + status;
     }
 }

@@ -31,7 +31,7 @@ public class Booking {
     }
 
     public String getBookingDetails() {
-        return "Booking Id: " + bookingId + "\nField: " + field.getInfo() + "\nMember; " + member.getUsername() + "\nDate: " + date + "\nTime: " + timeSlot;
+        return "Booking Id: " + bookingId + "\nField: " + field.getInfo() + "\nMember: " + member.getUsername() + "\nDate: " + date + "\nTime: " + timeSlot;
     }
 
 }

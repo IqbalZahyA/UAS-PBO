@@ -1,5 +1,4 @@
 import java.util.*;
-import java.util.Scanner;
 
 public class Main {
 
@@ -82,23 +81,79 @@ public class Main {
         System.out.println("Registrasi berhasil.");
     }
 
-    static void showAdminMenu() {
-        System.out.println("\n=== MENU ADMIN ===");
-        System.out.println("1. Tambah Lapangan");
-        System.out.println("2. Lihat Semua Lapangan");
-        System.out.println("3. Logout");
-        System.out.print("Pilih: ");
-        int pilihan = scanner.nextInt();
-        scanner.nextLine();
+    // Tambahkan opsi CRUD di menu admin
+static void showAdminMenu() {
+    System.out.println("\n=== MENU ADMIN ===");
+    System.out.println("1. Tambah Lapangan");
+    System.out.println("2. Lihat Semua Lapangan");
+    System.out.println("3. Update Lapangan");
+    System.out.println("4. Hapus Lapangan");
+    System.out.println("5. Logout");
+    System.out.print("Pilih: ");
+    int pilihan = scanner.nextInt();
+    scanner.nextLine();
 
-        switch (pilihan) {
-            case 1 -> tambahLapangan();
-            case 2 -> tampilkanLapangan();
-            case 3 -> loggedInUser = null;
-            default -> System.out.println("Pilihan tidak valid.");
+    switch (pilihan) {
+        case 1 -> tambahLapangan();
+        case 2 -> tampilkanLapangan();
+        case 3 -> updateLapangan();
+        case 4 -> hapusLapangan();
+        case 5 -> loggedInUser = null;
+        default -> System.out.println("Pilihan tidak valid.");
+    }
+}
+
+// Tambahkan metode untuk update lapangan
+static void updateLapangan() {
+    tampilkanLapangan();
+    System.out.print("Masukkan ID lapangan yang ingin diupdate: ");
+    String fieldId = scanner.nextLine();
+    Field selectedField = null;
+
+    for (Field f : system.getFields()) {
+        if (f.getFieldId().equals(fieldId)) {
+            selectedField = f;
+            break;
         }
     }
 
+    if (selectedField == null) {
+        System.out.println("Lapangan tidak ditemukan.");
+        return;
+    }
+
+    System.out.print("Nama baru: ");
+    String newName = scanner.nextLine();
+    System.out.print("Tipe baru: ");
+    String newType = scanner.nextLine();
+
+    selectedField.setFieldName(newName);
+    selectedField.setFieldType(newType);
+    System.out.println("Lapangan berhasil diupdate.");
+}
+
+// Tambahkan metode untuk hapus lapangan
+static void hapusLapangan() {
+    tampilkanLapangan();
+    System.out.print("Masukkan ID lapangan yang ingin dihapus: ");
+    String fieldId = scanner.nextLine();
+    Field selectedField = null;
+
+    for (Field f : system.getFields()) {
+        if (f.getFieldId().equals(fieldId)) {
+            selectedField = f;
+            break;
+        }
+    }
+
+    if (selectedField == null) {
+        System.out.println("Lapangan tidak ditemukan.");
+        return;
+    }
+
+    system.getFields().remove(selectedField);
+    System.out.println("Lapangan berhasil dihapus.");
+}
     static void showMemberMenu() {
         System.out.println("\n=== MENU MEMBER ===");
         System.out.println("1. Booking Lapangan");

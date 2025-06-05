@@ -1,5 +1,4 @@
 import java.util.*;
-import java.util.Scanner;
 
 public class Database {
     public static List<Booking> bookings = new ArrayList<>();

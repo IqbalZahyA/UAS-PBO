@@ -39,13 +39,12 @@ public class FieldManagementSystem {
     public List<Field> searchField(String keyword) {
         List<Field> result = new ArrayList<>();
         for (Field f : fields) {
-            if (f.getName().toLowerCase().contains(keyword.toLowerCase())) {
+            if (f.getFieldName().toLowerCase().contains(keyword.toLowerCase())) { // Ganti getName() dengan getFieldName()
                 result.add(f);
             }
         }
         return result;
     }
-
     public void bookField(Member member, Field field, String date, String timeSlot) {
         String bookingId = "BKG" + (bookings.size() + 1);
         Booking booking = new Booking(bookingId, date, timeSlot, field, member);
