@@ -82,27 +82,28 @@ public class Main {
     }
 
     // Tambahkan opsi CRUD di menu admin
-static void showAdminMenu() {
-    System.out.println("\n=== MENU ADMIN ===");
-    System.out.println("1. Tambah Lapangan");
-    System.out.println("2. Lihat Semua Lapangan");
-    System.out.println("3. Update Lapangan");
-    System.out.println("4. Hapus Lapangan");
-    System.out.println("5. Logout");
-    System.out.print("Pilih: ");
-    int pilihan = scanner.nextInt();
-    scanner.nextLine();
-
-    switch (pilihan) {
-        case 1 -> tambahLapangan();
-        case 2 -> tampilkanLapangan();
-        case 3 -> updateLapangan();
-        case 4 -> hapusLapangan();
-        case 5 -> loggedInUser = null;
-        default -> System.out.println("Pilihan tidak valid.");
+    static void showAdminMenu() {
+        System.out.println("\n=== MENU ADMIN ===");
+        System.out.println("1. Tambah Lapangan");
+        System.out.println("2. Lihat Semua Lapangan");
+        System.out.println("3. Update Lapangan");
+        System.out.println("4. Hapus Lapangan");
+        System.out.println("5. Cari Lapangan");
+        System.out.println("6. Logout");
+        System.out.print("Pilih: ");
+        int pilihan = scanner.nextInt();
+        scanner.nextLine();
+    
+        switch (pilihan) {
+            case 1 -> tambahLapangan();
+            case 2 -> tampilkanLapangan();
+            case 3 -> updateLapangan();
+            case 4 -> hapusLapangan();
+            case 5 -> cariLapangan(); // Tambahkan opsi pencarian
+            case 6 -> loggedInUser = null;
+            default -> System.out.println("Pilihan tidak valid.");
+        }
     }
-}
-
 // Tambahkan metode untuk update lapangan
 static void updateLapangan() {
     tampilkanLapangan();
@@ -154,23 +155,24 @@ static void hapusLapangan() {
     system.getFields().remove(selectedField);
     System.out.println("Lapangan berhasil dihapus.");
 }
-    static void showMemberMenu() {
-        System.out.println("\n=== MENU MEMBER ===");
-        System.out.println("1. Booking Lapangan");
-        System.out.println("2. Lihat Booking Saya");
-        System.out.println("3. Logout");
-        System.out.print("Pilih: ");
-        int pilihan = scanner.nextInt();
-        scanner.nextLine();
+static void showMemberMenu() {
+    System.out.println("\n=== MENU MEMBER ===");
+    System.out.println("1. Booking Lapangan");
+    System.out.println("2. Lihat Booking Saya");
+    System.out.println("3. Cari Lapangan");
+    System.out.println("4. Logout");
+    System.out.print("Pilih: ");
+    int pilihan = scanner.nextInt();
+    scanner.nextLine();
 
-        switch (pilihan) {
-            case 1 -> bookingLapangan();
-            case 2 -> lihatBookingSaya();
-            case 3 -> loggedInUser = null;
-            default -> System.out.println("Pilihan tidak valid.");
-        }
+    switch (pilihan) {
+        case 1 -> bookingLapangan();
+        case 2 -> lihatBookingSaya();
+        case 3 -> cariLapangan(); // Tambahkan opsi pencarian
+        case 4 -> loggedInUser = null;
+        default -> System.out.println("Pilihan tidak valid.");
     }
-
+}
     static void tambahLapangan() {
         System.out.print("ID Lapangan: ");
         String id = scanner.nextLine();
@@ -246,7 +248,21 @@ static void hapusLapangan() {
             System.out.println("Anda belum melakukan booking apapun.");
         }
     }
-
+    static void cariLapangan() {
+        System.out.print("Masukkan kata kunci pencarian: ");
+        String keyword = scanner.nextLine();
+    
+        List<Field> hasilPencarian = system.searchField(keyword);
+    
+        if (hasilPencarian.isEmpty()) {
+            System.out.println("Tidak ada lapangan yang cocok dengan kata kunci \"" + keyword + "\".");
+        } else {
+            System.out.println("\n=== HASIL PENCARIAN ===");
+            for (Field field : hasilPencarian) {
+                System.out.println(field.getInfo());
+            }
+        }
+    }
     static void seedData() {
         // Tambah satu admin
         system.registerUser(new Admin("admin", "admin123", "A01", "Administrator"));
