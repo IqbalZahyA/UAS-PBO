@@ -47,7 +47,8 @@ public class FieldManagementSystem {
     }
     public void bookField(Member member, Field field, String date, String timeSlot) {
         String bookingId = "BKG" + (bookings.size() + 1);
-        Booking booking = new Booking(bookingId, date, timeSlot, field, member);
+        String priority = "Medium";
+        Booking booking = new Booking(bookingId, date, timeSlot, field, member, priority);
         field.setStatus("Booked");
         bookings.add(booking);
     }

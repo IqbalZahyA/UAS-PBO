@@ -81,7 +81,6 @@ public class Main {
         System.out.println("Registrasi berhasil.");
     }
 
-    // Tambahkan opsi CRUD di menu admin
     static void showAdminMenu() {
         System.out.println("\n=== MENU ADMIN ===");
         System.out.println("1. Tambah Lapangan");
@@ -89,7 +88,8 @@ public class Main {
         System.out.println("3. Update Lapangan");
         System.out.println("4. Hapus Lapangan");
         System.out.println("5. Cari Lapangan");
-        System.out.println("6. Logout");
+        System.out.println("6. Lihat Booking Berdasarkan Prioritas");
+        System.out.println("7. Logout");
         System.out.print("Pilih: ");
         int pilihan = scanner.nextInt();
         scanner.nextLine();
@@ -99,11 +99,13 @@ public class Main {
             case 2 -> tampilkanLapangan();
             case 3 -> updateLapangan();
             case 4 -> hapusLapangan();
-            case 5 -> cariLapangan(); // Tambahkan opsi pencarian
-            case 6 -> loggedInUser = null;
+            case 5 -> cariLapangan();
+            case 6 -> lihatBookingBerdasarkanPrioritas(); // Tambahkan opsi ini
+            case 7 -> loggedInUser = null;
             default -> System.out.println("Pilihan tidak valid.");
         }
     }
+
 // Tambahkan metode untuk update lapangan
 static void updateLapangan() {
     tampilkanLapangan();
@@ -168,7 +170,7 @@ static void showMemberMenu() {
     switch (pilihan) {
         case 1 -> bookingLapangan();
         case 2 -> lihatBookingSaya();
-        case 3 -> cariLapangan(); // Tambahkan opsi pencarian
+        case 3 -> cariLapangan();
         case 4 -> loggedInUser = null;
         default -> System.out.println("Pilihan tidak valid.");
     }
@@ -197,40 +199,42 @@ static void showMemberMenu() {
         System.out.print("Masukkan ID lapangan yang ingin dibooking: ");
         String fieldId = scanner.nextLine();
         Field selectedField = null;
-
+    
         for (Field f : system.getFields()) {
             if (f.getFieldId().equals(fieldId)) {
                 selectedField = f;
                 break;
             }
         }
-
+    
         if (selectedField == null) {
             System.out.println("Lapangan tidak ditemukan.");
             return;
         }
-
+    
         System.out.print("Tanggal (yyyy-mm-dd): ");
         String tanggal = scanner.nextLine();
         System.out.print("Jam (contoh 16:00-18:00): ");
         String waktu = scanner.nextLine();
-
+        System.out.print("Prioritas (High/Medium/Low): ");
+        String priority = scanner.nextLine();
+    
         if (BookingManager.isFieldAvaiable(selectedField.getFieldId(), tanggal, waktu)) {
             Booking newBooking = new Booking(
                     "B" + (Database.bookings.size() + 1),
                     tanggal,
                     waktu,
                     selectedField,
-                    (Member) loggedInUser
+                    (Member) loggedInUser,
+                    priority // Tambahkan prioritas
             );
             Database.bookings.add(newBooking);
             selectedField.setStatus("Booked");
-            System.out.println("Booking berhasil!");
+            System.out.println("Booking berhasil dengan prioritas " + priority + "!");
         } else {
             System.out.println("Jadwal bentrok! Silakan pilih waktu lain.");
         }
     }
-
     static void lihatBookingSaya() {
         Member currentMember = (Member) loggedInUser;
         boolean found = false;
@@ -261,6 +265,25 @@ static void showMemberMenu() {
             for (Field field : hasilPencarian) {
                 System.out.println(field.getInfo());
             }
+        }
+    }
+
+    static void lihatBookingBerdasarkanPrioritas() {
+        System.out.print("Masukkan prioritas (High/Medium/Low): ");
+        String priority = scanner.nextLine();
+    
+        boolean found = false;
+        System.out.println("\n=== BOOKING DENGAN PRIORITAS " + priority.toUpperCase() + " ===");
+        for (Booking booking : Database.bookings) {
+            if (booking.getPriority().equalsIgnoreCase(priority)) {
+                System.out.println(booking.getBookingDetails());
+                System.out.println("-------------------------");
+                found = true;
+            }
+        }
+    
+        if (!found) {
+            System.out.println("Tidak ada booking dengan prioritas " + priority + ".");
         }
     }
     static void seedData() {
